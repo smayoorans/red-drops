@@ -3,7 +3,7 @@
   <persistence-unit name="RedDropsJPAunit" transaction-type="RESOURCE_LOCAL">
     <provider>org.hibernate.ejb.HibernatePersistence</provider>
    
-    <!--<class>com.university.jaffna.model.Other_details</class> -->
+    <class>com.yarlithub.hackathon.model.BloodBank</class>
     
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>

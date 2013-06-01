@@ -48,6 +48,11 @@ public class MainMenu implements MoUssdListener{
     int count_level0=1;
     int count_level1=1;   
     String init_key="0"; 
+    String pincode="";
+    String bloodgroup="";
+    String bloodtype="";
+    String neededtime="";
+    String location="";
     
    String display="";
     
@@ -150,17 +155,17 @@ public class MainMenu implements MoUssdListener{
         String outputString="";
         
         if(level==0){          
-           outputString="1.Get Info\n2.Send Info\n000.Exit"; 
+           outputString="Welcome to RED DROPS \n1.Blood Bank\n2.Blood Donor\n000.Exit"; 
         }
-       /* if(level>0)
+        if(level>0)
         {
             if(level==1){
                 init_key=key;
                 if("1".equals(init_key)){
-                    outputString=getInfo(key);
+                    outputString= getBlood_Bank(key);
                 }
                 else if("2".equals(init_key)){
-                    outputString=sendInfo(key);
+                    outputString=getBlood_Donar(key);
                 }
                 else outputString=outputString+"Invalid Selection"+"\n999:Back"+key;
             }
@@ -174,10 +179,41 @@ public class MainMenu implements MoUssdListener{
                 }
                 else outputString=outputString+"Invalid Selection"+"\n999:Back"+key;
             }  
-        } */
+        } 
        return outputString;
     }
  
+    private String getBlood_Bank(final String key)
+    {
+        String outputString="";
+        if(level==1)
+        {
+            outputString=outputString+"Please enter your pin code:";     
+        }else if(level==2){
+            outputString=outputString+"Please enter the blood group:";  
+            pincode = key;
+        }
+        else if(level==3){
+        bloodgroup=key;
+        System.out.println("pincode="+pincode);
+        System.out.println("bloodgroup="+bloodgroup);
+        }
+        
+        
+        
+         return outputString;
+         
+    }
+    
+    private String getBlood_Donar(final String key)
+    {
+        String outputString="";
+        
+         return outputString;
+         
+        
+    }
+    
     private String getInfo(final String key)
     {
         String outputString="dsfdf";
@@ -308,18 +344,7 @@ public class MainMenu implements MoUssdListener{
          String outputString="dfdf";
        /*  User_detailsDAO ud=new User_detailsDAO();
          
-        if(level==1)
-        {
-            outputString=outputString+"Please Enter your User Name:";     
-        }
-        else if(level==2){
-            outputString=outputString+"Please Enter your Password:";  
-            uname = key;
-        }
-        else if(level==3){
-            pw=key;
-            System.out.println("pw="+pw);
-            System.out.println("uname="+uname);
+       
             List validUser=ud.getUserdetails(uname,pw);
             
             if(!validUser.isEmpty()){

@@ -18,40 +18,59 @@ import javax.persistence.Id;
 public class BloodBank implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    //@GeneratedValue(strategy = GenerationType.AUTO)
+    private int pincode;
+    private String bloodbank_name;
+    private String bloodbank_location;
+    private String  sector;
 
-    public Long getId() {
-        return id;
+    
+    public BloodBank() {
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    
+    public BloodBank(int pincode, String bloodbank_name, String bloodbank_location, String sector) {
+        this.pincode = pincode;
+        this.bloodbank_name = bloodbank_name;
+        this.bloodbank_location = bloodbank_location;
+        this.sector = sector;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
-        return hash;
+    
+    public String getBloodbank_location() {
+        return bloodbank_location;
     }
 
-    @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof BloodBank)) {
-            return false;
-        }
-        BloodBank other = (BloodBank) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
-            return false;
-        }
-        return true;
+    public void setBloodbank_location(String bloodbank_location) {
+        this.bloodbank_location = bloodbank_location;
     }
 
-    @Override
-    public String toString() {
-        return "com.yarlithub.hackathon.model.BloodBank[ id=" + id + " ]";
+    public String getBloodbank_name() {
+        return bloodbank_name;
     }
+
+    public void setBloodbank_name(String bloodbank_name) {
+        this.bloodbank_name = bloodbank_name;
+    }
+
+    public int getPincode() {
+        return pincode;
+    }
+
+    public void setPincode(int pincode) {
+        this.pincode = pincode;
+    }
+
+    public String getSector() {
+        return sector;
+    }
+
+    public void setSector(String sector) {
+        this.sector = sector;
+    }
+    
+    
+
+    
     
 }

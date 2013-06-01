@@ -10,67 +10,163 @@
     <name>Red-drops</name>
 
     <properties>
-        <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- This is the path wher ideamart jar files located in local -->
+		<ideamart.lib>C:\Users\Mayooran\Desktop\Hackathon\Red-drops\lib</ideamart.lib>
+		<jetty.port>8999</jetty.port>
+  </properties>
 
     <dependencies>
         <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-web-api</artifactId>
-            <version>6.0</version>
-            <scope>provided</scope>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>1.7.2</version>
+			<scope>system</scope>
+			<systemPath>${ideamart.lib}/gson-1.7.2.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>hms</groupId>
+			<artifactId>sdp.app.api</artifactId>
+			<version>1.0.11-SNAPSHOT</version>
+			<scope>system</scope>
+			<systemPath>${ideamart.lib}/sdp.app.api-1.0.11-SNAPSHOT.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>system</scope>
+			<systemPath>${ideamart.lib}/servlet-api-2.5.jar</systemPath>
+		</dependency>
+                
+                
+            <dependency>
+            <groupId>com.sun.faces</groupId>
+            <artifactId>jsf-api</artifactId>
+            <version>2.0.0-b13</version>
+            <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.sun.faces</groupId>
+            <artifactId>jsf-impl</artifactId>
+            <version>2.0.0-b13</version>
+            <scope>compile</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>3.3.2.GA</version>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.13</version>
+            <type>jar</type>
+        </dependency>
+        
+	 <dependency>
+             <groupId>org.eclipse.persistence</groupId>
+             <artifactId>eclipselink</artifactId>
+             <version>2.3.0</version>
+	 </dependency>
+         
+	 <dependency>
+             <groupId>org.eclipse.persistence</groupId>
+             <artifactId>javax.persistence</artifactId>
+             <version>2.0.3</version>
+	 </dependency>
+         
+	 <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate</artifactId>
+            <version>3.2.5.ga</version>
+	 </dependency>
+         
+	 <dependency>
+             <groupId>org.hibernate</groupId>
+             <artifactId>ejb3-persistence</artifactId>
+             <version>1.0.1.GA</version>
+	 </dependency>
+         
+	 <dependency>
+              <groupId>javax.sql</groupId>
+              <artifactId>jdbc-stdext</artifactId>
+              <version>2.0</version>
+	 </dependency>
+         
+	 <dependency>
+              <groupId>javax.transaction</groupId>
+              <artifactId>jta</artifactId>
+              <version>1.0.1B</version>
+	 </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                    <compilerArguments>
-                        <endorseddirs>${endorsed.dir}</endorseddirs>
-                    </compilerArguments>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.1.1</version>
-                <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.1</version>
-                <executions>
-                    <execution>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${endorsed.dir}</outputDirectory>
-                            <silent>true</silent>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>javax</groupId>
-                                    <artifactId>javaee-endorsed-api</artifactId>
-                                    <version>6.0</version>
-                                    <type>jar</type>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
+	<plugin>
+		<artifactId>maven-antrun-plugin</artifactId>
+		<version>1.1</version>
+		<executions>
+			<execution>
+				<id>config</id>
+				<phase>process-resources</phase>
+				<configuration>
+					<tasks>
+                                            <copy
+						todir="${project.build.directory}/${project.build.finalName}/WEB-INF/lib">
+						<fileset dir="${ideamart.lib}">
+                                                </fileset>
+                                            </copy>
+					</tasks>
+				</configuration>
+				<goals>
+        				<goal>run</goal>
+				</goals>
+			</execution>
+	</executions>
+	</plugin>
+   
+        <plugin>
+		<groupId>org.mortbay.jetty</groupId>
+		<artifactId>maven-jetty-plugin</artifactId>
+		<configuration>
+			<connectors>
+				<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+					<port>8999</port>
+					<maxIdleTime>60000</maxIdleTime>
+				</connector>
+			</connectors>
+				<stopPort>9966</stopPort>
+				<stopKey>jetty-stop</stopKey>
+				<scanIntervalSeconds>10</scanIntervalSeconds>
+		</configuration>
+	</plugin>
+    </plugins>
     </build>
-
+<repositories>
+    <repository>
+        <url>http://download.eclipse.org/rt/eclipselink/maven.repo/</url>
+        <id>eclipselink</id>
+        <layout>default</layout>
+    <name>Repository for library Library[eclipselink]</name>
+    </repository>
+  
+  <repository>
+        <url>http://repo1.maven.org/maven2/</url>
+        <id>hibernate-persistence</id>
+        <layout>default</layout>
+        <name>Repository for library Library[hibernate-persistence]</name>
+  </repository>
+ 
+ </repositories>
 </project>

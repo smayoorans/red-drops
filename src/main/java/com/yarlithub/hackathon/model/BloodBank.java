@@ -6,8 +6,6 @@ package com.yarlithub.hackathon.model;
 
 import java.io.Serializable;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
@@ -18,7 +16,7 @@ import javax.persistence.Id;
 public class BloodBank implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    //@GeneratedValue(strategy = GenerationType.AUTO)
+   // @GeneratedValue(strategy = GenerationType.AUTO)
     private int pincode;
     private String bloodbank_name;
     private String bloodbank_location;

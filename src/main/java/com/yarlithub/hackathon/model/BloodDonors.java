@@ -16,7 +16,7 @@ import javax.persistence.Id;
  */
 @Entity
 public class BloodDonors implements Serializable {
-    private static final long serialVersionUID = 1L;
+  //  private static final long serialVersionUID = 1L;
     @Id
     private int phone_number;
     private String donor_name;

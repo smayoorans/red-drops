@@ -16,9 +16,9 @@ import javax.persistence.Id;
  */
 @Entity
 public class BloodBank_Request implements Serializable {
-    private static final long serialVersionUID = 1L;
+   
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+   // @GeneratedValue(strategy = GenerationType.AUTO)
     private int request_id;
     private int pincode;
     private String blood_group;

@@ -4,6 +4,13 @@
  */
 package com.yarlithub.hackathon.reddrops;
 
+
+import com.yarlithub.hackathon.dao.BloodBankDao;
+import com.yarlithub.hackathon.dao.BloodBank_RequsetDao;
+import com.yarlithub.hackathon.dao.BloodDonorsDao;
+import com.yarlithub.hackathon.model.BloodBank;
+import com.yarlithub.hackathon.model.BloodBank_Request;
+import com.yarlithub.hackathon.model.BloodDonors;
 import com.yarlithub.hackathon.util.Messages;
 import hms.kite.samples.api.SdpException;
 import hms.kite.samples.api.StatusCodes;
@@ -15,7 +22,7 @@ import hms.kite.samples.api.ussd.messages.MtUssdResp;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-
+import java.util.Iterator;
 import java.util.List;
 import java.util.MissingResourceException;
 import java.util.logging.Level;
@@ -48,13 +55,17 @@ public class MainMenu implements MoUssdListener{
     int count_level0=1;
     int count_level1=1;   
     String init_key="0"; 
-    String pincode="";
+    int pincode;
+    String donorname="";
     String bloodgroup="";
     String bloodtype="";
     String neededtime="";
     String location="";
     
    String display="";
+   
+   String bloodbank_name="";
+   String bloodbank_location="";
     
     @Override
     public void init()
@@ -125,7 +136,7 @@ public class MainMenu implements MoUssdListener{
             }
          else{
                 serviceCode = getServiceCode(moUssdReq);
-                //level=level+1;
+                level=level+1;
             }
         }
         // create request to display user
@@ -156,6 +167,7 @@ public class MainMenu implements MoUssdListener{
         
         if(level==0){          
            outputString="Welcome to RED DROPS \n1.Blood Bank\n2.Blood Donor\n000.Exit"; 
+             System.out.println("level 0 :"+level);
         }
         if(level>0)
         {
@@ -171,11 +183,12 @@ public class MainMenu implements MoUssdListener{
             }
             else
             {
+            
                 if("1".equals(init_key)){
-                    outputString=getInfo(key);
+                    outputString=getBlood_Bank(key);
                 }
                 else if("2".equals(init_key)){
-                    outputString=sendInfo(key);
+                    outputString=getBlood_Donar(key);
                 }
                 else outputString=outputString+"Invalid Selection"+"\n999:Back"+key;
             }  
@@ -188,16 +201,45 @@ public class MainMenu implements MoUssdListener{
         String outputString="";
         if(level==1)
         {
-            outputString=outputString+"Please enter your pin code:";     
+            outputString=outputString+"Please enter your pin code:";   
+          
         }else if(level==2){
-            outputString=outputString+"Please enter the blood group:";  
-            pincode = key;
+            pincode = Integer.parseInt(key);
+            
+            BloodBankDao bbd=new BloodBankDao();
+            BloodBank bb=new BloodBank();
+            //List validBloodBank=bb.getBloodBank(pincode);
+            List t=bbd.validpincode(pincode);
+            
+            if(!t.isEmpty()){
+                outputString=outputString+"Select the blood group: \n 1. O \n 2. A \n 2. B \n 2. AB \n999:Back";   
+            }
+            else{
+                outputString= outputString + "Invalid pin code! Try again\n999:Back\n000:Exit";  
+            }
         }
-        else if(level==3){
-        bloodgroup=key;
-        System.out.println("pincode="+pincode);
-        System.out.println("bloodgroup="+bloodgroup);
+        else if(level==3){            
+            bloodgroup=getbloodgroup(key);           
+            outputString=outputString+"Select your Blood Type \n 1. Positive \n 2. Negative \n999:Back\n000:Exit";                                    
         }
+        else if(level==4){  
+            
+           bloodtype=getbloodtype(key);  
+           bloodgroup=bloodgroup+bloodtype;
+           
+           outputString="Select needed time:\n 1. Urgent \n 2.Ordinary \n999:Back\n000.Exit";
+        }
+        else if(level==5){           
+            neededtime=getneededtime(key); 
+            int my_id=12466;
+            BloodBank_Request  bdr=new BloodBank_Request(my_id,pincode,bloodgroup,neededtime);            
+            BloodBank_RequsetDao bd=new BloodBank_RequsetDao();            
+            bd.insert_donor_request_detail(bdr); 
+             outputString=outputString+"Your request has been successfully sent. We will inform donors as soon as possible. \n Thank you \n000.Exit";
+            
+        } 
+        
+    
         
         
         
@@ -207,272 +249,107 @@ public class MainMenu implements MoUssdListener{
     
     private String getBlood_Donar(final String key)
     {
+        //String outputString="you in Donor";        
+        // return outputString;
+        //int phn=0773400432;
         String outputString="";
-        
-         return outputString;
-         
-        
-    }
-    
-    private String getInfo(final String key)
-    {
-        String outputString="dsfdf";
-        /* 
-        Market_DetailsDAO mkt=new Market_DetailsDAO();
-        VegetableDAO vgt = new VegetableDAO();
-        FruitDAO frt = new FruitDAO();
-        OtherDAO othr = new OtherDAO();
-        
-        
-       
-        List location=mkt.getMarketLocation();
-        int key_int=Integer.parseInt(key);
-        
-        if(level==1){
-             int size_location=location.size();
-             if(size_location==0){
-                  outputString="No Data Found \n000.Exit";
-             }
-             else if(location.size()>5){
-                int j=0;
-                if(count_level0*5 < size_location){
-                    j=count_level0*5;
-                }
-                else{
-                    j=size_location;
-                }
-                for(int i=(count_level0-1)*5;i<j;i++){
-                    outputString= outputString + (i+1)+ ":" + location.get(i).toString()+"\n";
-                } 
-                outputString=outputString+"999:Back\n992.Next\n000.Exit";
-                }
-             
-             else{
-                for(int i=0;i<size_location;i++)
-                     outputString= outputString + (i+1)+ ":" + location.get(i).toString()+"\n";
-                outputString=outputString+"000.Exit";
-             }
-           
+        if(level==1)
+        {
+            outputString=outputString+"Enter your Name:";
+            
         }
         else if(level==2){
-           
-            if(key_int<=location.size() && key_int>0){ 
-            loc=location.get(key_int-1).toString();  
-            market=mkt.getMarket(location.get(key_int-1).toString());
-            int size_market=market.size();
-            
-             if(size_market==0){
-                 outputString="No Data Found \n 999:Back\n000.Exit";
-             }
-             if(market.size()>5){
-                   
-                    int j=0;
-                    if(count_level1*5 < size_market){
-                        j=count_level1*5;
-                    }
-                    else{
-                        j=size_market;
-                    }
-                    for(int i=(count_level1-1)*5;i<j;i++){
-                        outputString= outputString + (i+1)+ ":" + market.get(i).toString()+"\n";
-                    }
-                    outputString=outputString+"999:Back\n000.Exit";
-            }
-             else{
-                for(int i=0; i<market.size();i++)
-                    outputString= outputString + (i+1)+ ":" + market.get(i).toString()+"\n";
-              outputString=outputString+"999:Back\n000.Exit";  
-             }
-            }  
-            else{
-               // level=1;
-                outputString=outputString+"Invalid Selection"+"\n999:Back\n000.Exit";   
-                
-            } 
-                
-            }
-
-        else if (level==3){
-            if(key_int<=market.size() && key_int>0){
-                mar=market.get(key_int-1).toString();
-                
-           for(int i=0; i<item.length;i++){
-                outputString= outputString + (i+1)+ ":" + item[i]+"\n";
-            } 
-           outputString=outputString+"999:Back\n000.Exit";
-            }
-            else{
-                outputString=outputString+"Invalid Selection"+"\n999:Back\n000.Exit";
-                //level=2;
-            }
+            donorname = key;          
+        outputString=outputString+"Select your area \n1.Anaikoddai\n2.Chankanai\n3.Jaffna\n4.Nallur\n5.Thirunalvelly\n000.Exit";
         }
-       else if (level==4){
-           String  itm=item[key_int-1].substring(0,1);
-            product=mkt.getProduct(loc, mar,itm);
-                if(product.isEmpty()){
-                    outputString="No Data Found today \n999:Back\n000.Exit";
-                }
-                 else{
-                     Iterator stIterator=product.iterator();
-               
-                    while(stIterator.hasNext()){
-			Marketer_product st=(Marketer_product)stIterator.next();
-                       
-			String a=st.getProduct_id();
-                        String prefix=a.substring(0,1);
-                         
-                        if("V".equals(prefix))
-                        {
-			List b=vgt.getProductName(a);
-			outputString=outputString+b.get(0) +"- "+st.getUnit_price()+"\n";
-                        }
-                        else if("F".equals(prefix)){
-                         List b=frt.getProductName(a);
-			outputString=outputString+b.get(0) +"- "+st.getUnit_price()+"\n"; 
-                        }
-                       else if("O".equals(prefix)){
-                         List b=othr.getProductName(a);
-			outputString=outputString+b.get(0) +"- "+st.getUnit_price()+"\n"; 
-                        }     
-                    }
-            }
-       } */
-        return outputString;
-    }
-    
-    private String sendInfo(final String key){    
-         String outputString="dfdf";
-       /*  User_detailsDAO ud=new User_detailsDAO();
-         
-       
-            List validUser=ud.getUserdetails(uname,pw);
-            
-            if(!validUser.isEmpty()){
-                  Iterator stIterator=validUser.iterator();
-                    while(stIterator.hasNext()){
-			User_details us=(User_details)stIterator.next();
-                       
-			 regid=us.getRegistration_id().toString();
-                    }
-            outputString=outputString+"Please Select your Product Category:\n";
-            String category="";
-            for(int i=0; i<item.length;i++){
-                category=category+(i+1)+ ":" + item[i]+"\n";
-            } 
-            outputString=outputString+category+"999:Back\n000:Exit";
-            }
-            else{
-                outputString= outputString + "Invalid User! Try again\n999:Back\n000:Exit";  
-            }
+        else if(level==3){
+            location=getlocation(key);          
+        outputString=outputString+"Select your blood group \n1.O\n2.A\n3.B\n4.AB\n000.Exit"; 
         }
         else if(level==4){
-            int key_int=Integer.parseInt(key);
-            category=item[key_int-1];
-            outputString=outputString+"Please Enter your Product Name: \n999:Back\n000.Exit";
-
+            bloodgroup=getbloodgroup(key);
+            System.out.println(bloodgroup);
+        outputString=outputString+"Select your blood group \n1.Positive\n2.Negative\n000.Exit"; 
         }
-        else if(level==5){
-            outputString=outputString+"Please Enter your Product type description\n999:Back\n000.Exit";
-            product_name=key;
-           
-        }
-        else if(level==6){
-        outputString=outputString+"Please Select your Product condition:\n";
-             product_des=key;
-             String con="";
-         for(int i=0;i<condition.length;i++)
-             con=con+(i+1)+":"+condition[i]+"\n";
-          outputString=outputString+con+"999:Back\n000.Exit";
-         } 
-         else if(level==7){
-           int key_int=Integer.parseInt(key);
-           outputString=outputString+"Please Enter the amount of product:\n999:Back\n000.Exit";
-           product_cond=condition[key_int-1];
-         }
-         else if(level==8){
-            outputString=outputString+"Please Enter the expected price:\n999:Back\n000.Exit";
-            amount=key;
-         }
-         else if(level==9){
-            outputString=outputString+"Please Enter the location:\n999:Back\n000.Exit";
-            price=key;
-         }
-         else if(level==10){
-             loacation=key;
-             
-             Farmer_productDAO f=new Farmer_productDAO();
-             List<String> pid = null;
-             VegetableDAO vd=new VegetableDAO();
-             FruitDAO fr=new FruitDAO();
-             OtherDAO otr=new OtherDAO();
-             
-             String sprodid = null;
-             if("Vegetable".equals(category)){
-                 pid=vd.getProductId(product_name,product_des);  
-             }
-             else if("Fruit".equals(category)){
-                pid=fr.getProductId(product_name,product_des);  
-             }
-             else if("Other".equals(category)){
-               pid =otr.getProductId(product_name,product_des);  
-             }
-            
-            if(!pid.isEmpty()){
-             Farmer_product fm=new Farmer_product(regid,pid.get(0).toString(),currentDate,product_cond,amount,price,loacation,loacation_coordinate);
-            // Vegetable_details v=new Vegetable_details(regid,product_name,product_des);
-            
-           
-            f.insert_Farmer_product(fm);
-           // f.insertVegetable_details(v);
-            
-            }
-            else{
-                
-             if("Vegetable".equals(category)){
-                pro_id=vd.getmaxProductId().get(0).toString();
-                int prodid=Integer.parseInt(pro_id.substring(1));
-                prodid = prodid+1;
-                
-                sprodid="V"+prodid ;
-                Vegetable_details v=new Vegetable_details(sprodid,product_name,product_des);
-                vd.insertVegetable_details(v);
-             }
-             else if("Fruit".equals(category)){
-                pro_id=fr.getmaxProductId().get(0).toString();
-                int prodid=Integer.parseInt(pro_id.substring(1));
-                prodid = prodid+1;
-
-                sprodid="F"+prodid; 
-                Fruit_details f1=new Fruit_details(sprodid,product_name,product_des);
-                fr.insertFruit_details(f1);
-             }
-             else if("Other".equals(category)){
-                pro_id=otr.getmaxProductId().get(0).toString();
-                int prodid=Integer.parseInt(pro_id.substring(1));
-                prodid = prodid+1;
-
-                sprodid ="O"+prodid;
-                Other_details o=new Other_details(sprodid,product_name,product_des);
-                otr.insertOther_details(o);
-             }
-             Farmer_product fm=new Farmer_product(regid,sprodid,currentDate,product_cond,amount,price,loacation,loacation_coordinate);
-             Vegetable_details v=new Vegetable_details(sprodid,product_name,product_des);
-                f.insert_Farmer_product(fm);
-               
-                
-            }
-      
-        outputString="Your product has been inserted";
-         } */
-        return outputString;
+         else if(level==5){
+            bloodgroup=bloodgroup+getbloodtype(key);     
+            // insert to table
+            BloodDonors  bdm=new BloodDonors(07730433,donorname,bloodgroup,location);            
+            BloodDonorsDao bdd=new BloodDonorsDao();            
+            bdd.insert_donor_detail(bdm);
+            outputString=outputString+"You are now registered on RED-DROP we will contact you soon.\nThank you\n000.Exit"; 
+        }  
+        
+         return outputString;  
     }
     
-    /**
-     * Request sender
-     * 
-     * @param request
-     * @return MtUssdResp
-     */
+     public String getneededtime(String key){
+        if(Integer.parseInt(key)==1)
+        {
+          return "Urgent";
+        }
+         if(Integer.parseInt(key)==2)
+        {
+          return "Ordinary";
+        }
+        else return "Invalid selection";
+    }
+     
+    public String getbloodgroup(String key){
+        if(Integer.parseInt(key)==1)
+        {
+          return "O";
+        }
+         if(Integer.parseInt(key)==2)
+        {
+          return "A";
+        }
+          if(Integer.parseInt(key)==3)
+        {
+          return "B";
+        }
+           if(Integer.parseInt(key)==4)
+        {
+          return "AB";
+        }
+        else return "Invalid selection";
+    } 
+    public String getbloodtype(String key){
+        if(Integer.parseInt(key)==1)
+        {
+          return "+";
+        }
+         if(Integer.parseInt(key)==2)
+        {
+          return "-";
+        }
+        else return "Invalid selection";
+    }
+    public String getlocation(String key){
+        if(Integer.parseInt(key)==1)
+        {
+          return "Anaikoddai";
+        }
+        if(Integer.parseInt(key)==2)
+        {
+          return "Chankanai";
+        }
+        if(Integer.parseInt(key)==3)
+        {
+          return "Jaffna";
+        }
+        if(Integer.parseInt(key)==4)
+        {
+          return "Nallur";
+        }
+        if(Integer.parseInt(key)==5)
+        {
+          return "Thirunelvelly";
+        }
+        else return "Invalid selection";
+    }
+  
+  
     private MtUssdResp sendRequest(final MtUssdReq request) throws SdpException
     {
         // sending request to service
@@ -533,7 +410,7 @@ public class MainMenu implements MoUssdListener{
         {
             menuState.remove(menuState.size() - 1);
             lastMenuVisited = menuState.get(menuState.size() - 1);
-           // level=level-1;   
+            level=level-1;   
         }
 
         // create request and send

@@ -25,7 +25,7 @@ public class BloodBankDao {
     }
     
      public java.util.List validpincode(int pin){
-      Query query = em.createQuery("select pincode from BloodBank where pincode='"+pin+"'");
+      Query query = em.createQuery("select pinCode from BloodBank where pinCode='"+pin+"'");
       return query.getResultList();
   }
     

@@ -1,62 +1,52 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.yarlithub.hackathon.model;
 
-import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.io.Serializable;
 
-/**
- *
- * @author Mayooran
- */
 @Entity
 public class BloodBank implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-   // @GeneratedValue(strategy = GenerationType.AUTO)
-    private int pincode;
-    private String bloodbank_name;
-    private String bloodbank_location;
-    private String  sector;
+    // @GeneratedValue(strategy = GenerationType.AUTO)
+    private int pinCode;
+    private String bloodBankName;
+    private String bloodBankLocation;
+    private String sector;
 
-    
+
     public BloodBank() {
     }
 
-    
-    public BloodBank(int pincode, String bloodbank_name, String bloodbank_location, String sector) {
-        this.pincode = pincode;
-        this.bloodbank_name = bloodbank_name;
-        this.bloodbank_location = bloodbank_location;
+    public BloodBank(int pinCode, String bloodBankName, String bloodBankLocation, String sector) {
+        this.pinCode = pinCode;
+        this.bloodBankName = bloodBankName;
+        this.bloodBankLocation = bloodBankLocation;
         this.sector = sector;
     }
 
-    
-    public String getBloodbank_location() {
-        return bloodbank_location;
+    public String getBloodBankLocation() {
+        return bloodBankLocation;
     }
 
-    public void setBloodbank_location(String bloodbank_location) {
-        this.bloodbank_location = bloodbank_location;
+    public void setBloodBankLocation(String bloodBankLocation) {
+        this.bloodBankLocation = bloodBankLocation;
     }
 
-    public String getBloodbank_name() {
-        return bloodbank_name;
+    public String getBloodBankName() {
+        return bloodBankName;
     }
 
-    public void setBloodbank_name(String bloodbank_name) {
-        this.bloodbank_name = bloodbank_name;
+    public void setBloodBankName(String bloodBankName) {
+        this.bloodBankName = bloodBankName;
     }
 
-    public int getPincode() {
-        return pincode;
+    public int getPinCode() {
+        return pinCode;
     }
 
-    public void setPincode(int pincode) {
-        this.pincode = pincode;
+    public void setPinCode(int pinCode) {
+        this.pinCode = pinCode;
     }
 
     public String getSector() {
@@ -66,9 +56,4 @@ public class BloodBank implements Serializable {
     public void setSector(String sector) {
         this.sector = sector;
     }
-    
-    
-
-    
-    
 }

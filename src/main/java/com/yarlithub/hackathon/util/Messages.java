@@ -7,7 +7,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Messages {
-    public static final String BUNDLE_NAME = "com.yarlithub.hackathon.resources.ussdmenu"; //$NON-NLS-1$
+
+    public static final String BUNDLE_NAME = "ussdmenu"; //$NON-NLS-1$
     private static ResourceBundle resourceBundle = ResourceBundle.getBundle(BUNDLE_NAME);
     private static final Logger LOGGER = Logger.getLogger(Messages.class.getName());
 

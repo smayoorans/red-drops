@@ -5,7 +5,7 @@ import javax.persistence.Id;
 import java.io.Serializable;
 
 @Entity
-public class BloodBank_Request implements Serializable {
+public class BloodBankRequest implements Serializable {
 
     @Id
     // @GeneratedValue(strategy = GenerationType.AUTO)
@@ -14,10 +14,10 @@ public class BloodBank_Request implements Serializable {
     private String bloodGroup;
     private String neededType;
 
-    public BloodBank_Request() {
+    public BloodBankRequest() {
     }
 
-    public BloodBank_Request(int requestId, int pinCode, String bloodGroup, String neededType) {
+    public BloodBankRequest(int requestId, int pinCode, String bloodGroup, String neededType) {
         this.requestId = requestId;
         this.pinCode = pinCode;
         this.bloodGroup = bloodGroup;

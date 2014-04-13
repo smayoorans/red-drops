@@ -4,7 +4,7 @@ import com.yarlithub.hackathon.dao.BloodBankDao;
 import com.yarlithub.hackathon.dao.BloodBankRequestDao;
 import com.yarlithub.hackathon.dao.BloodDonorsDao;
 import com.yarlithub.hackathon.model.BloodBank;
-import com.yarlithub.hackathon.model.BloodBank_Request;
+import com.yarlithub.hackathon.model.BloodBankRequest;
 import com.yarlithub.hackathon.model.BloodDonors;
 import com.yarlithub.hackathon.util.Messages;
 import hms.kite.samples.api.SdpException;
@@ -188,7 +188,7 @@ public class MainMenu implements MoUssdListener {
         } else if (level == 5) {
             neededTime = getneededtime(key);
             int my_id = 12466;
-            BloodBank_Request bdr = new BloodBank_Request(my_id, pinCode, bloodGroup, neededTime);
+            BloodBankRequest bdr = new BloodBankRequest(my_id, pinCode, bloodGroup, neededTime);
             BloodBankRequestDao bd = new BloodBankRequestDao();
             bd.insert_donor_request_detail(bdr);
             outputString = outputString + "Your request has been successfully sent. We will inform donors as soon as possible. \n Thank you \n000.Exit";
